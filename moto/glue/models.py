@@ -5,6 +5,7 @@ import re
 from typing import Dict, List
 
 from moto.core import BaseBackend, BackendDict, BaseModel
+from moto.core.utils import iso_8601_datetime_without_milliseconds
 from moto.moto_api import state_manager
 from moto.moto_api._internal import mock_random
 from moto.moto_api._internal.managed_state_model import ManagedState
@@ -759,7 +760,7 @@ class FakeDatabase(BaseModel):
             "Description": self.input.get("Description"),
             "LocationUri": self.input.get("LocationUri"),
             "Parameters": self.input.get("Parameters"),
-            "CreateTime": self.created_time.isoformat(),
+            "CreateTime": iso_8601_datetime_without_milliseconds(self.created_time),
             "CreateTableDefaultPermissions": self.input.get(
                 "CreateTableDefaultPermissions"
             ),
@@ -797,7 +798,7 @@ class FakeTable(BaseModel):
         obj = {
             "DatabaseName": self.database_name,
             "Name": self.name,
-            "CreateTime": self.created_time.isoformat(),
+            "CreateTime": iso_8601_datetime_without_milliseconds(self.created_time),
         }
         obj.update(self.get_version(version))
         return obj
@@ -920,8 +921,8 @@ class FakeCrawler(BaseModel):
             "State": self.state,
             "TablePrefix": self.table_prefix,
             "CrawlElapsedTime": self.crawl_elapsed_time,
-            "CreationTime": self.creation_time.isoformat(),
-            "LastUpdated": self.last_updated.isoformat(),
+            "CreationTime": iso_8601_datetime_without_milliseconds(self.creation_time),
+            "LastUpdated": iso_8601_datetime_without_milliseconds(self.last_updated),
             "LastCrawl": last_crawl,
             "Version": self.version,
             "Configuration": self.configuration,
@@ -1037,8 +1038,10 @@ class FakeJob:
             "Description": self.description,
             "LogUri": self.log_uri,
             "Role": self.role,
-            "CreatedOn": self.created_on.isoformat(),
-            "LastModifiedOn": self.last_modified_on.isoformat(),
+            "CreatedOn": iso_8601_datetime_without_milliseconds(self.created_on),
+            "LastModifiedOn": iso_8601_datetime_without_milliseconds(
+                self.last_modified_on
+            ),
             "ExecutionProperty": self.execution_property,
             "Command": self.command,
             "DefaultArguments": self.default_arguments,
@@ -1110,9 +1113,9 @@ class FakeJobRun(ManagedState):
             "PreviousRunId": "01",
             "TriggerName": "test_trigger",
             "JobName": self.job_name,
-            "StartedOn": self.started_on.isoformat(),
-            "LastModifiedOn": self.modified_on.isoformat(),
-            "CompletedOn": self.completed_on.isoformat(),
+            "StartedOn": iso_8601_datetime_without_milliseconds(self.started_on),
+            "LastModifiedOn": iso_8601_datetime_without_milliseconds(self.modified_on),
+            "CompletedOn": iso_8601_datetime_without_milliseconds(self.completed_on),
             "JobRunState": self.status,
             "Arguments": self.arguments or {"runSpark": "spark -f test_file.py"},
             "ErrorMessage": "",
